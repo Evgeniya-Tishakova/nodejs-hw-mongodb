@@ -1,6 +1,0 @@
-import { getAllContacts } from "../services/contacts.js";
-
-export const getContactsController = async () => {
-  const contacts = await getAllContacts();
-  res.status(200).json({ data: contacts });
-};
