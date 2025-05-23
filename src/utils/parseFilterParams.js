@@ -14,7 +14,7 @@ const parseType = (value) => {
 
 const parseIsFavourite = (value) => {
   if (typeof value === "undefined") {
-    return "undefined";
+    return undefined;
   }
 
   if (value === "true") {
