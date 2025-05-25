@@ -2,11 +2,11 @@ const parseType = (value) => {
   const parsedType = ["home", "work", "personal"];
 
   if (typeof value === "undefined") {
-    return "undefined";
+    return undefined;
   }
 
   if (!parsedType.includes(value)) {
-    return "undefined";
+    return undefined;
   }
 
   return value;
