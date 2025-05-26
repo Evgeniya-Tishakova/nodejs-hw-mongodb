@@ -3,12 +3,9 @@ const parseSortBy = (value) => {
     return "_id";
   }
 
-  const keys = ["id", "name", "phoneNumber"];
+  const keys = ["_id", "name", "phoneNumber"];
 
-  if (keys.includes(value) !== true) {
-    return "_id";
-  }
-  return value;
+  return keys.includes(value) ? value : "_id";
 };
 
 const parseSortOrder = (value) => {
@@ -16,11 +13,11 @@ const parseSortOrder = (value) => {
     return "asc";
   }
 
-  if (value !== "asc" || value !== "desc") {
-    return "asc";
+  if (value === "asc" || value === "desc") {
+    return value;
   }
 
-  return value;
+  return "asc";
 };
 
 export const parseSortParams = (query) => {
