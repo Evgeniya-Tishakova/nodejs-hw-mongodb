@@ -79,7 +79,7 @@ export const createContactController = async (req, res) => {
 
 export const patchContactController = async (req, res) => {
   const { contactId } = req.params;
-  const result = await patchContact(contactId, req.body);
+  const result = await patchContact(contactId, req.body, req.user._id);
 
   if (!result) {
     throw createHttpError(404, "Contact not found");
@@ -96,7 +96,7 @@ export const patchContactController = async (req, res) => {
 
 export const deleteContactController = async (req, res) => {
   const { contactId } = req.params;
-  const contact = await deleteContact(contactId);
+  const contact = await deleteContact(contactId, req.user._id);
 
   if (!contact) {
     throw createHttpError(404, "Contact not found");

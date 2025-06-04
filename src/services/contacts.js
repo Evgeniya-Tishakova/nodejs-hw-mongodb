@@ -51,6 +51,8 @@ export const createContact = async (payload) => {
 };
 
 export const patchContact = async (contactId, payload, userId) => {
+  console.log("qwerty", contactId, userId);
+
   const result = await contactsCollection.findOneAndUpdate(
     { _id: contactId, userId },
     payload,
