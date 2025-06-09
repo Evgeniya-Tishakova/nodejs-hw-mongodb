@@ -16,14 +16,12 @@ import {
 import { isValidId } from "../middlewares/isValidId.js";
 
 const router = express.Router();
-const jsonParser = express.json();
 
 router.get("/", ctrlWrapper(getContactsController));
 router.get("/:contactId", isValidId, ctrlWrapper(getContactByIdController));
 
 router.post(
   "/",
-  jsonParser,
   upload.single("photo"),
   validateBody(createContactSchema),
   ctrlWrapper(createContactController)
@@ -31,7 +29,7 @@ router.post(
 
 router.patch(
   "/:contactId",
-  jsonParser,
+  upload.single("photo"),
   isValidId,
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactController)

@@ -1,3 +1,6 @@
+import * as fs from "node:fs/promises";
+import path from "node:path";
+
 import createHttpError from "http-errors";
 import {
   createContact,
@@ -6,9 +9,12 @@ import {
   getContactById,
   patchContact,
 } from "../services/contacts.js";
+
+import { getEnvVar } from "../utils/getEnvVar.js";
 import { parsePaginationParams } from "../utils/parsePaginationParams.js";
 import { parseSortParams } from "../utils/parseSortParams.js";
 import { parseFilterParams } from "../utils/parseFilterParams.js";
+import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
 
 // !GET
 
@@ -63,9 +69,27 @@ export const getContactByIdController = async (req, res) => {
 // !POST
 
 export const createContactController = async (req, res) => {
+  let photo = null;
+
+  if (getEnvVar("UPLOAD_TO_CLOUDINARY") === "true") {
+    const result = await uploadToCloudinary(req.file.path);
+
+    await fs.unlink(req.file.path);
+
+    photo = result.secure_url;
+  } else {
+    await fs.rename(
+      req.file.path,
+      path.resolve("src", "uploads", "photos", req.file.filename)
+    );
+
+    photo = `http://localhost:3000/photos/${req.file.filename}`;
+  }
+
   const contact = await createContact({
     ...req.body,
     userId: req.user._id,
+    photo,
   });
 
   res.status(201).json({
@@ -79,7 +103,30 @@ export const createContactController = async (req, res) => {
 
 export const patchContactController = async (req, res) => {
   const { contactId } = req.params;
-  const result = await patchContact(contactId, req.body, req.user._id);
+  const photo = req.file;
+
+  let photoUrl;
+
+  if (photo) {
+    if (getEnvVar("UPLOAD_TO_CLOUDINARY") === "true") {
+      const result = await uploadToCloudinary(photo.path);
+      await fs.unlink(photo.path); // удаляем временный файл
+      photoUrl = result.secure_url;
+    } else {
+      const newFileName = `${Date.now()}_${photo.originalname}`;
+      const destination = path.resolve("src", "uploads", "photos", newFileName);
+      await fs.rename(photo.path, destination);
+      photoUrl = `http://localhost:3000/photos/${newFileName}`;
+    }
+  }
+  const result = await patchContact(
+    contactId,
+    {
+      ...req.body,
+      ...(photoUrl && { photo: photoUrl }),
+    },
+    req.user._id
+  );
 
   if (!result) {
     throw createHttpError(404, "Contact not found");
