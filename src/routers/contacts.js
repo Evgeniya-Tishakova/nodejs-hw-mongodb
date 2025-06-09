@@ -6,6 +6,7 @@ import {
   patchContactController,
   deleteContactController,
 } from "../controllers/contacts.js";
+import { upload } from "../middlewares/upload.js";
 import { ctrlWrapper } from "../utils/ctrlWrapper.js";
 import { validateBody } from "../middlewares/validateBody.js";
 import {
@@ -23,6 +24,7 @@ router.get("/:contactId", isValidId, ctrlWrapper(getContactByIdController));
 router.post(
   "/",
   jsonParser,
+  upload.single("photo"),
   validateBody(createContactSchema),
   ctrlWrapper(createContactController)
 );

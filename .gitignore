@@ -137,3 +137,6 @@ dist
 \.env
 .history/
 
+/src/tmp/*
+!src/tmp/.gitkeep
+
