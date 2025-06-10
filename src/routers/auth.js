@@ -5,7 +5,7 @@ import {
   loginUserController,
   logoutUserController,
   refreshUserController,
-  requestResetEmailController,
+  requestResetEmailController as sendResetEmailController,
   resetPasswordController,
 } from "../controllers/auth.js";
 import {
@@ -38,10 +38,10 @@ router.post("/logout", ctrlWrapper(logoutUserController));
 router.post("/refresh", ctrlWrapper(refreshUserController));
 
 router.post(
-  "/request-reset-email",
+  "/send-reset-email",
   jsonParser,
   validateBody(requestResetEmailSchema),
-  ctrlWrapper(requestResetEmailController)
+  ctrlWrapper(sendResetEmailController)
 );
 
 router.post(
