@@ -1,0 +1,44 @@
+type: object
+required:
+  - _id
+  - name
+  - phoneNumber
+  - contactType
+properties:
+  _id:
+    type: string
+    description: Contact's id
+    example: 65e4decdd286b30065d54af9
+  name:
+    type: string
+    description: Contact's name
+    example: Bob Marvel
+  phoneNumber:
+    type: string
+    description: Contact's phoneNumber
+    example: 0990674714
+  email:
+    type: string
+    description: Contact's email
+    example: bobmarvel@gmail.com
+  contactType:
+    type: string
+    description: Contact's contact type
+    enum: ["work", "home", "personal"]
+    example: home
+    default: personal
+  photo:
+    type: string
+    format: uri
+    description: Link to contact's photo"
+    example: https://res.cloudinary.com/uqwgdu/image/upload/image.png
+  createdAt:
+    type: string
+    format: date-time
+    description: Contact's created at
+    example: 2025-03-27T19:43:21.686+00:00
+  updatedAt:
+    type: string
+    format: date-time
+    description: Student updated at
+    example: 2025-03-28T19:43:21.686+00:00

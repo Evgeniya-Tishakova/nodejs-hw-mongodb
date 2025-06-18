@@ -1,5 +1,6 @@
 import * as fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 
 import bcrypt from "bcrypt";
 import Handlebars from "handlebars";
@@ -37,7 +38,7 @@ export const loginUser = async (email, password) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw createHttpError(401, "User not found");
+    return createHttpError(401, "User not found");
   }
   const isEqual = await bcrypt.compare(password, user.password);
 
@@ -147,4 +148,27 @@ export const resetPassword = async (password, token) => {
     { _id: user._id },
     { password: encryptedPassword }
   );
+};
+
+export const loginOrRegister = async (email, name) => {
+  let user = await User.findOne({ email });
+
+  if (!user) {
+    const password = await bcrypt.hash(
+      crypto.randomBytes(30).toString("base64"),
+      10
+    );
+
+    user = await User.create({ name, email, password });
+
+    await Session.deleteOne({ userId: user._id });
+
+    return Session.create({
+      userId: user._id,
+      accessToken: crypto.randomBytes(30).toString("base64"),
+      refreshToken: crypto.randomBytes(30).toString("base64"),
+      accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000),
+      refreshTokenValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+  }
 };
