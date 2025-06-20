@@ -7,15 +7,32 @@ security:
   - bearerAuth: []
 parameters:
   - in: query
-    name: isFavourite
+    name: page
     schema:
-      type: boolean
+      type: integer
   - in: query
-    name: type
+    name: perPage
+    schema:
+      type: integer
+  - in: query
+    name: sortBy
+    schema:
+      type: string
+    description: "Contact's fields as name and CreatedAt can be mentioned. Default value - _id"
+  - in: query
+    name: sortOrder
+    schema:
+      type: string
+      enum: ["asc", "desc"]
+  - in: query
+    name: contactType
     schema:
       type: string
       enum: ["work", "home", "personal"]
-      example: personal
+  - in: query
+    name: isFavourite
+    schema:
+      type: boolean
 responses:
   "200":
     description: Successfully found contacts!

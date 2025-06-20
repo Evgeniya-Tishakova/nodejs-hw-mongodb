@@ -29,7 +29,7 @@ properties:
     default: personal
   photo:
     type: string
-    format: uri
+    format: binary
     description: Link to contact's photo"
     example: https://res.cloudinary.com/uqwgdu/image/upload/image.png
   createdAt:
